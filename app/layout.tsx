@@ -6,14 +6,19 @@ export const metadata: Metadata = {
   description: "A clean, secure, scalable foundation ready for on-chain integration",
 };
 
+import { Navigation } from "@/components/Navigation";
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang="en" className="dark">
+      <body className="min-h-screen bg-dark-bg text-dark-text antialiased">
+        <Navigation />
+        <main className="min-h-screen">{children}</main>
+      </body>
     </html>
   );
 }

@@ -109,50 +109,54 @@ export function WalletConnect() {
   }
 
   return (
-    <div className="p-4 border rounded-lg max-w-md">
-      <h2 className="text-xl font-bold mb-4">Wallet Connection</h2>
-
-      {error && (
-        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">
-          {error}
-        </div>
-      )}
-
-      {!address ? (
-        <button
-          onClick={handleConnect}
-          disabled={isConnecting}
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
-        >
-          {isConnecting ? "Connecting..." : "Connect Wallet"}
-        </button>
-      ) : (
-        <div className="space-y-4">
-          <div>
-            <p className="text-sm text-gray-600 mb-1">Connected Address:</p>
-            <p className="font-mono text-sm break-all">{address}</p>
+    <div className="flex items-center gap-3">
+      {address ? (
+        <>
+          <div className="hidden sm:block text-sm">
+            <p className="text-dark-textMuted text-xs">Connected</p>
+            <p className="font-mono text-xs text-dark-text">
+              {address.slice(0, 6)}...{address.slice(-4)}
+            </p>
           </div>
-
           {!isVerified ? (
             <button
               onClick={handleSignIn}
               disabled={isSigning}
-              className="w-full px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
+              className="btn-primary text-sm px-4 py-2"
             >
-              {isSigning ? "Signing..." : "Sign In With Ethereum"}
+              {isSigning ? "Signing..." : "Sign In"}
             </button>
           ) : (
-            <div className="p-3 bg-green-100 text-green-700 rounded">
-              ✓ Verified
+            <div className="hidden sm:flex items-center gap-2 text-dark-success text-sm">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              <span>Verified</span>
             </div>
           )}
-
           <button
             onClick={handleDisconnect}
-            className="w-full px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
+            className="text-dark-textMuted hover:text-dark-text text-sm"
           >
             Disconnect
           </button>
+        </>
+      ) : (
+        <button
+          onClick={handleConnect}
+          disabled={isConnecting}
+          className="btn-primary text-sm px-4 py-2"
+        >
+          {isConnecting ? "Connecting..." : "Connect"}
+        </button>
+      )}
+      {error && (
+        <div className="absolute top-full right-0 mt-2 p-3 bg-dark-error/20 border border-dark-error rounded-lg text-dark-error text-sm max-w-xs z-50">
+          {error}
         </div>
       )}
     </div>
