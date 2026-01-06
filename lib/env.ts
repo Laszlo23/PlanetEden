@@ -20,6 +20,9 @@ const envSchema = z.object({
   // Add your server-side secrets here
   // DATABASE_URL: z.string().url().optional(),
   // API_SECRET_KEY: z.string().min(32).optional(),
+  BOOKING_CONTRACT_ADDRESS: z.string().regex(/^0x[a-fA-F0-9]{40}$/).optional(),
+  RPC_URL: z.string().url().optional(),
+  PRIVATE_KEY: z.string().regex(/^0x[a-fA-F0-9]{64}$/).optional(),
 });
 
 /**
@@ -30,6 +33,9 @@ export const env = envSchema.parse({
   NODE_ENV: process.env.NODE_ENV,
   NEXT_PUBLIC_APP_DOMAIN: process.env.NEXT_PUBLIC_APP_DOMAIN,
   NEXT_PUBLIC_APP_ORIGIN: process.env.NEXT_PUBLIC_APP_ORIGIN,
+  BOOKING_CONTRACT_ADDRESS: process.env.BOOKING_CONTRACT_ADDRESS,
+  RPC_URL: process.env.RPC_URL,
+  PRIVATE_KEY: process.env.PRIVATE_KEY,
 });
 
 /**

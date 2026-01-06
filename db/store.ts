@@ -1,5 +1,6 @@
 import "server-only";
 import { WalletIdentity, Session } from "./schema";
+import type { Booking } from "./booking-schema";
 import { logger } from "@/lib/logger";
 
 /**
@@ -80,3 +81,61 @@ class DatabaseStore {
 
 // Singleton instance
 export const db = new DatabaseStore();
+
+/**
+ * Booking Database Store
+ * In-memory storage for bookings (replace with real database in production)
+ */
+class BookingStore {
+  private bookings: Map<string, Booking> = new Map();
+  private providerBookings: Map<string, Set<string>> = new Map();
+  private clientBookings: Map<string, Set<string>> = new Map();
+
+  async create(booking: Booking): Promise<Booking> {
+    this.bookings.set(booking.id, booking);
+
+    // Index by provider
+    if (!this.providerBookings.has(booking.providerAddress)) {
+      this.providerBookings.set(booking.providerAddress, new Set());
+    }
+    this.providerBookings.get(booking.providerAddress)?.add(booking.id);
+
+    // Index by client
+    if (booking.clientAddress) {
+      if (!this.clientBookings.has(booking.clientAddress)) {
+        this.clientBookings.set(booking.clientAddress, new Set());
+      }
+      this.clientBookings.get(booking.clientAddress)?.add(booking.id);
+    }
+
+    logger.info("Booking created", { bookingId: booking.id });
+    return booking;
+  }
+
+  async getById(bookingId: string): Promise<Booking | null> {
+    return this.bookings.get(bookingId) ?? null;
+  }
+
+  async update(booking: Booking): Promise<Booking> {
+    this.bookings.set(booking.id, booking);
+    logger.debug("Booking updated", { bookingId: booking.id });
+    return booking;
+  }
+
+  async getByProvider(providerAddress: string): Promise<Booking[]> {
+    const bookingIds = this.providerBookings.get(providerAddress) ?? new Set();
+    return Array.from(bookingIds)
+      .map((id) => this.bookings.get(id))
+      .filter((booking): booking is Booking => booking !== undefined);
+  }
+
+  async getByClient(clientAddress: string): Promise<Booking[]> {
+    const bookingIds = this.clientBookings.get(clientAddress) ?? new Set();
+    return Array.from(bookingIds)
+      .map((id) => this.bookings.get(id))
+      .filter((booking): booking is Booking => booking !== undefined);
+  }
+}
+
+// Singleton instance
+export const bookingDb = new BookingStore();
