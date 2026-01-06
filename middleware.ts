@@ -21,6 +21,15 @@ export function middleware(_request: NextRequest) {
   const response = NextResponse.next();
   const isProduction = process.env.NODE_ENV === "production";
 
+  // Future: Session verification can be added here
+  // Note: Middleware runs in Edge Runtime, so use Edge-compatible APIs
+  // For session verification, consider doing it in API routes instead
+  // Example:
+  // const sessionToken = request.cookies.get("session")?.value;
+  // if (sessionToken) {
+  //   // Verify session in API route, not middleware (Edge Runtime limitation)
+  // }
+
   // Content Security Policy - stricter in production
   const cspDirectives = isProduction
     ? [

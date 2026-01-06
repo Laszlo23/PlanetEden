@@ -20,6 +20,7 @@ const envSchema = z.object({
   // Add server-side secrets and configuration here
   // DATABASE_URL: z.string().url().optional(),
   // API_SECRET_KEY: z.string().min(32).optional(),
+  SESSION_SECRET: z.string().min(32).optional(), // For session token signing
 });
 
 /**
@@ -30,7 +31,7 @@ const envSchema = z.object({
  */
 export const env = envSchema.parse({
   NODE_ENV: process.env.NODE_ENV,
-  // Add other env vars here as you add them to the schema above
+  SESSION_SECRET: process.env.SESSION_SECRET,
 });
 
 /**
