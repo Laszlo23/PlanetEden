@@ -106,6 +106,32 @@ The project includes a complete Sign-In With Ethereum (SIWE) implementation:
 
 Currently uses an in-memory store (for development). Replace `db/store.ts` with your production database.
 
+## Booking Integrity System
+
+A booking system with on-chain anchoring for integrity verification.
+
+### Features
+- **Off-Chain Bookings**: All booking data stored off-chain (no personal data on-chain)
+- **On-Chain Commitments**: Booking hashes committed to smart contract
+- **Overlap Prevention**: Contract prevents double-booking per provider
+- **Minimal On-Chain Storage**: Only cryptographic hashes stored on-chain
+- **Verification**: Anyone can verify booking commitments
+
+### Smart Contract
+- **BookingIntegrity.sol**: Solidity contract for booking commitments
+- Prevents overlapping bookings per provider
+- Stores only booking hashes (bytes32)
+- Time slot-based efficient checking
+
+### API Routes
+- `POST /api/bookings/create` - Create booking and commit on-chain
+- `POST /api/bookings/check` - Check time slot availability
+- `GET /api/bookings/[id]` - Get booking details
+- `DELETE /api/bookings/[id]` - Cancel booking
+- `POST /api/bookings/verify` - Verify booking hash on-chain
+
+See `services/booking-README.md` for detailed documentation.
+
 ## Project Status
 
 This is a foundation project with:
@@ -120,4 +146,7 @@ This is a foundation project with:
 - ✅ Middleware foundation for auth/wallet verification
 - ✅ Wallet-based identity (SIWE)
 - ✅ Cryptographic signature verification
-- ⏳ Ready for on-chain integration
+- ✅ Booking integrity system with on-chain anchoring
+- ✅ Smart contract for booking commitments
+- ✅ Overlap prevention per provider
+# PlanetEden
